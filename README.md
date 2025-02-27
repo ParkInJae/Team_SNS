@@ -57,6 +57,7 @@ public void blackList (HttpServletRequest request
 			 	그러나 별칭 c 는 각 행이 아닌 테이블 전체에 대한 내용이기 때문에 서브쿼리에 사용할 수 없음 
 			 */
 			
+// 서브 쿼리의 내용을 as로 별칭을 만들고 조회 
 			String sql = "";
 			sql = " select "
 			+ "    b.uno, "
@@ -108,13 +109,16 @@ public void blackList (HttpServletRequest request
 	}
 	
 ```
+
 📗 개선한 부분
 
 처음에는 getStartPage()를 psmt에 세팅하고 있어 오류가 발생하는 줄 모르고 , getStartPage()가 null이라서 받아오지 못한다고 생각하여 
+
 ```
 	 System.out.println("paging.getStartPage()::::"+paging.getStart());
 	 System.out.println("paging.getPerPage()::::"+paging.getPerPage());
 ```
+
 코드를 통해서 콘솔로 확인하는데 콘솔창에 값을 나타내어, 문제점을 찾지 못하다가 
 선생님에게 질문하여 문제점이 paging.getStartPage()은 1부터 시작을 해서 , 게시글이 11개여도 초기 시작인 0번째 인덱스를 생략하고 뽑아내는 논리적 오류가 있다는 것을 알게 되었고, 
 <br/>
@@ -146,8 +150,9 @@ paging.getStartPage() 이 아니라 paging.getStart()로 작성해야했다는 �
 ```
 
 처음 페이징에 관련해서, 여러 사용자가 특정 사용자를 신고했을 때 , 신고당한 사용자가 블랙리스트에 한 페이지를 채울 수 있다고 생각하고 sql문을 작성했다 <br/> 
-작성한 sql문이 신고 횟수는 올리지만, 신고당한 사용자가 중복되어 나타나는 현상을 막을 수 없었고, sql문을 찾아보다 
-DISTINCT를 알게 되었고, 중복 제거의 특징을 가진 DISTINCT라면 여러번 신고당한 사용자가 중복되지 않고 한 번만 나타날 수 있다는 생각을 갖고 작성한 쿼리이다. 
+
+작성한 sql문이 신고 횟수는 올리지만, 신고당한 사용자가 중복되어 나타나는 현상을 막을 수 없었고, sql문을 찾아보다 DISTINCT를 
+알게 되었고, 중복 제거의 특징을 가진 DISTINCT라면 여러번 신고당한 사용자가 중복되지 않고 한 번만 나타날 수 있다는 생각을 갖고 작성한 쿼리이다. 
 <br/>
 
 ✴︎ 쿼리의 목적 
@@ -160,6 +165,7 @@ DISTINCT를 알게 되었고, 중복 제거의 특징을 가진 DISTINCT라면 �
 ```
  FROM complaint_board c LEFT JOIN board b ON c.bno = b.bno
 ```
+
 위의 쿼리는 complaint_board에 board를 left조인 하는데 조건으로 게시글 번호가 동일한 행을 left 조인 한다는 의미를 가지고 있다 .<br/>
 
 2)  group by 절
@@ -229,6 +235,7 @@ else if (comments[comments.length - 1].equals("mypage_bookmark.do")) {
 해당 조건에 따라서 정리를 했음 
 
 ➡️ 정리 후 코드      
+
 ```
 // 클릭했을 때 mypage로 이동 
 onclick="location.href='<%= request.getContextPath() %>/user/mypage.do?uno=<%= vo.getUno() %>&type=written'"
@@ -344,7 +351,7 @@ UserVO loginUser = null;
 		}
 
 // mypage.jsp 에서의 불러오는 객체들에 대한 유효성 검사
-%
+<%
 UserVO login = null;
 if(session.getAttribute("loginUser") != null){
 	login = (UserVO)session.getAttribute("loginUser");
@@ -360,6 +367,7 @@ if(pageUser != null){
 	pUno = pageUser.getUno();
 	pPname = pageUser.getPname();
 }
+
 // 현재 보고있는 섹션을 페이지가 알 수 있도록 표시하기 위해 type 변수 선언 
 String type = "bookmark";
 if (request.getParameter("type") != null && !request.getParameter("type").equals("")) {
@@ -382,7 +390,8 @@ if(request.getAttribute("fcnt") != null ){
 ```
 
 2) type의 값을 이용해서 문자열이 같을 때 해당하는 메소드로 보낼 수 있다는 생각을 하지 못했음 <br/>
-아래 처럼 타입에 맞는 문자열을 이용해서 값을 보냈다면, 이미 생성된 메소드를 쪼갤 필요가 없었음.. 
+아래 처럼 타입에 맞는 문자열을 이용해서 값을 보냈다면, 이미 생성된 메소드를 쪼갤 필요가 없었음..
+
 ```
 if(type.equals("bookmark")) {
 				myPageBookmark(request, response);
