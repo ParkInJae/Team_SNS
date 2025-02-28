@@ -68,7 +68,7 @@ public class BoardController {
 	
 	HttpSession session = request.getSession();
 	UserVO loginUser = (UserVO)session.getAttribute("loginUser");
-	// Æû µ¥ÀÌÅÍ °¡Á®¿À±â
+	// í¼ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
 	String uno = loginUser.getUno();
 	int tuno = Integer.parseInt(request.getParameter("tuno"));
 
@@ -104,7 +104,7 @@ public class BoardController {
 		    rs.next();
 		    int fno = rs.getInt("fno");
 	    	
-	        // ÃßÃµÀÌ ÀÌ¹Ì Á¸ÀçÇÏ¸é delete
+	        // ì¶”ì²œì´ ì´ë¯¸ ì¡´ìž¬í•˜ë©´ delete
 	    	sql = "delete from follow where uno = ? and tuno = ?";
 	        psmt = conn.prepareStatement(sql);
 	        psmt.setString(1, uno);
@@ -117,7 +117,7 @@ public class BoardController {
 	        psmt.executeUpdate();
 	        
 	    } else {
-	        // ÃßÃµÀÌ ¾øÀ¸¸é insert
+	        // ì¶”ì²œì´ ì—†ìœ¼ë©´ insert
 	        sql = "insert into follow (uno, tuno) values (?, ?)";
 	        System.out.println(sql);
 	        psmt = conn.prepareStatement(sql);
@@ -125,7 +125,7 @@ public class BoardController {
 	        psmt.setInt(2, tuno);
 	        System.out.println(psmt.executeUpdate());
 
-	        //ÆÈ·Î¿ìÅ×ÀÌºí¿¡ »õ·Îµé¾î°£ µ¥ÀÌÅÍÀÇ pk¸¦ °¡Á®¿Â
+	        //íŒ”ë¡œìš°í…Œì´ë¸”ì— ìƒˆë¡œë“¤ì–´ê°„ ë°ì´í„°ì˜ pkë¥¼ ê°€ì ¸ì˜¨
 	        
 	        sql = " SELECT last_insert_id() as no ";
 
@@ -176,7 +176,7 @@ public class BoardController {
 		 */
 		//String uploadPath = "D:\\pij\\Team\\first-SNS\\SNS\\src\\main\\webapp\\upload";
 		String uploadPath = request.getServletContext().getRealPath("/upload");
-		System.out.println("¼­¹öÀÇ ¾÷·Îµå Æú´õ °æ·Î : " + uploadPath);
+		System.out.println("ì„œë²„ì˜ ì—…ë¡œë“œ í´ë” ê²½ë¡œ : " + uploadPath);
 		HttpSession session = request.getSession();
 		UserVO loginUser = (UserVO)session.getAttribute("loginUser");
 		int uno = Integer.parseInt(loginUser.getUno()); 
@@ -184,51 +184,51 @@ public class BoardController {
 		int size = 10 * 1024 * 1024;
 		MultipartRequest multi;
 		try {
-		    // ÆÄÀÏ ¾÷·Îµå Ã³¸®
+		    // íŒŒì¼ ì—…ë¡œë“œ ì²˜ë¦¬
 		    multi = new MultipartRequest(request, uploadPath, size, "UTF-8", new DefaultFileRenamePolicy());
 		} catch (Exception e) {
 			e.getStackTrace();
-		    // ÆÄÀÏ ¾÷·Îµå ½ÇÆÐ ½Ã Ã³¸®
+		    // íŒŒì¼ ì—…ë¡œë“œ ì‹¤íŒ¨ ì‹œ ì²˜ë¦¬
 		    response.sendRedirect(request.getContextPath());
 		    return;
 		}
 
-		// input Å¸ÀÔ¿¡ ÆÄÀÏÀÌ ¿©·¯°³ Á¸ÀçÇÏ´Â °æ¿ì  
+		// input íƒ€ìž…ì— íŒŒì¼ì´ ì—¬ëŸ¬ê°œ ì¡´ìž¬í•˜ëŠ” ê²½ìš°  
 		Enumeration files = multi.getFileNames();
 		/*
-			// ÆÄÀÏÀÌ input Å¸ÀÔ¿¡ ÇÑ °³¸¸ Á¸ÀçÇÏ´Â °æ¿ì 
+			// íŒŒì¼ì´ input íƒ€ìž…ì— í•œ ê°œë§Œ ì¡´ìž¬í•˜ëŠ” ê²½ìš° 
 			multi.getFilesystemName("attach");
 		*/
-		String filename = multi.getFilesystemName("attach");  // ¿øº» ÆÄÀÏ ÀÌ¸§
-		String phyname = null;   // ¼­¹ö¿¡ ÀúÀåµÉ ÆÄÀÏ ÀÌ¸§
+		String filename = multi.getFilesystemName("attach");  // ì›ë³¸ íŒŒì¼ ì´ë¦„
+		String phyname = null;   // ì„œë²„ì— ì €ìž¥ë  íŒŒì¼ ì´ë¦„
 		String title = multi.getParameter("title");
 		String content = multi.getParameter("content");
 		
 		if (files.hasMoreElements()) {
 		    String fileid = (String) files.nextElement();
-		    filename = multi.getFilesystemName(fileid);  // ¿øº» ÆÄÀÏ ÀÌ¸§ °¡Á®¿À±â
+		    filename = multi.getFilesystemName(fileid);  // ì›ë³¸ íŒŒì¼ ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
 
 		    if (filename != null) {
-		        System.out.println("¾÷·ÎµåµÈ ÆÄÀÏ ÀÌ¸§: " + filename);
+		        System.out.println("ì—…ë¡œë“œëœ íŒŒì¼ ì´ë¦„: " + filename);
 		        System.out.println("title:"+title);
 		        System.out.println("content:"+content);
 		        
-		        // ¹°¸® ÆÄÀÏ ÀÌ¸§ »ý¼º (UUID »ç¿ë)
+		        // ë¬¼ë¦¬ íŒŒì¼ ì´ë¦„ ìƒì„± (UUID ì‚¬ìš©)
 		        phyname = UUID.randomUUID().toString();  
 		        
-		        // ÆÄÀÏ °æ·Î ¼³Á¤
+		        // íŒŒì¼ ê²½ë¡œ ì„¤ì •
 		        String srcName = uploadPath + "/" + filename;  
 		        String targetName = uploadPath + "/" + phyname;
 		        
-		        // ÆÄÀÏ ÀÌ¸§ º¯°æ (UUID·Î ÀúÀå)
+		        // íŒŒì¼ ì´ë¦„ ë³€ê²½ (UUIDë¡œ ì €ìž¥)
 		        File srcFile = new File(srcName);
 		        File targetFile = new File(targetName);
 
 		        boolean renamed = srcFile.renameTo(targetFile);
 		        if (!renamed) {
-		            System.out.println("ÆÄÀÏ ÀÌ¸§ º¯°æ ½ÇÆÐ");
+		            System.out.println("íŒŒì¼ ì´ë¦„ ë³€ê²½ ì‹¤íŒ¨");
 		        } else {
-		            System.out.println("ÆÄÀÏ ÀÌ¸§ º¯°æ ¼º°ø: " + phyname);
+		            System.out.println("íŒŒì¼ ì´ë¦„ ë³€ê²½ ì„±ê³µ: " + phyname);
 		        }
 		    }
 		}
@@ -246,37 +246,37 @@ public class BoardController {
 			conn = DBConn.conn();
 			String sql = " INSERT INTO board (uno,title,content)"
 					+ " VALUES(?,?,?)";
-			// sqlÀ» ´ã°í, ¸®ÅÏ Å°¸¦ ¹ÞÀ½
+			// sqlì„ ë‹´ê³ , ë¦¬í„´ í‚¤ë¥¼ ë°›ìŒ
 			psmt =conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			psmt.setInt(1, uno);
 			psmt.setString(2, title);
 			psmt.setString(3, content);
 			int result = psmt.executeUpdate();
 			if(result>0) {
-				//¾÷µ¥ÀÌÆ®°¡ ¼º°øÇÏ¸é, getGeneratedKeys()¸¦ ÅëÇØ¼­ Å°¸¦ ¹Þ¾Æ¿È
+				//ì—…ë°ì´íŠ¸ê°€ ì„±ê³µí•˜ë©´, getGeneratedKeys()ë¥¼ í†µí•´ì„œ í‚¤ë¥¼ ë°›ì•„ì˜´
 				ResultSet rs = psmt.getGeneratedKeys();
-				// ÀÌ¶§ getLongÀº longÅ¸ÀÔÀÌ±â ¶§¹®¿¡ longÅ¸ÀÔÀÇ º¯¼ö¸¦ »ý¼ºÇØÁà¾ßÇÔ
+				// ì´ë•Œ getLongì€ longíƒ€ìž…ì´ê¸° ë•Œë¬¸ì— longíƒ€ìž…ì˜ ë³€ìˆ˜ë¥¼ ìƒì„±í•´ì¤˜ì•¼í•¨
 				long key = 0L;
 				if (rs.next()) {
 				    key = rs.getLong(1);
 				    
 				}
-				System.out.println("keyÀÇ °ª : "+key); 
+				System.out.println("keyì˜ ê°’ : "+key); 
 				String sql1 = " SELECT LAST_INSERT_ID() as bno ";
 				sql1 = " INSERT INTO attach (bno, pname, fname) VALUES (?, ?, ?)";
-				// select last_insert_id()¸¦ ¹Þ¾Æ¿Í¼­ , bno¸¦ ´ëÀÔ 
+				// select last_insert_id()ë¥¼ ë°›ì•„ì™€ì„œ , bnoë¥¼ ëŒ€ìž… 
 				psmtAttach =conn.prepareStatement(sql1);
-				psmtAttach.setLong(1, key);  // ÅëÇØ ¹Þ¾Æ¿Â Å°¸¦ bno¿¡ ÀúÀåÇÔ,
-				psmtAttach.setString(2, phyname);  // ¹°¸®ÆÄÀÏ ÀÌ¸§ (¼­¹ö¿¡ ÀúÀåµÈ ÆÄÀÏÀÇ ÀÌ¸§)
-				psmtAttach.setString(3, filename); // ¿øº» ÆÄÀÏ ÀÌ¸§ (»ç¿ëÀÚ°¡ ¾÷·ÎµåÇÑ ÆÄÀÏ ÀÌ¸§)
+				psmtAttach.setLong(1, key);  // í†µí•´ ë°›ì•„ì˜¨ í‚¤ë¥¼ bnoì— ì €ìž¥í•¨,
+				psmtAttach.setString(2, phyname);  // ë¬¼ë¦¬íŒŒì¼ ì´ë¦„ (ì„œë²„ì— ì €ìž¥ëœ íŒŒì¼ì˜ ì´ë¦„)
+				psmtAttach.setString(3, filename); // ì›ë³¸ íŒŒì¼ ì´ë¦„ (ì‚¬ìš©ìžê°€ ì—…ë¡œë“œí•œ íŒŒì¼ ì´ë¦„)
 				resultAttach = psmtAttach.executeUpdate();
 				
 				System.out.println("result::"+result);
 				System.out.println("result::"+ resultAttach);
 				
 				/*
-				 // redirect´Â »õ·Î°íÄ§ ÇÏ±â ¶§¹®¿¡ ,ajaxÀÇ ¸ñÀûÀÎ ÆäÀÌÁö¸¦
-				    »õ·Î°íÄ§ÇÏÁö ¾Ê°í ¼­¹ö¿Í µ¥ÀÌÅÍ¸¦ ÁÖ°í ¹Þ´Â°Ô µÉ ¼ö ¾øÀ½
+				 // redirectëŠ” ìƒˆë¡œê³ ì¹¨ í•˜ê¸° ë•Œë¬¸ì— ,ajaxì˜ ëª©ì ì¸ íŽ˜ì´ì§€ë¥¼
+				    ìƒˆë¡œê³ ì¹¨í•˜ì§€ ì•Šê³  ì„œë²„ì™€ ë°ì´í„°ë¥¼ ì£¼ê³  ë°›ëŠ”ê²Œ ë  ìˆ˜ ì—†ìŒ
 				response.sendRedirect(request.getContextPath()+"index.jsp");*/
 				response.setContentType("text/html;charset=UTF-8");
 				PrintWriter out = response.getWriter();  
@@ -289,12 +289,25 @@ public class BoardController {
 			}
 			
 		}catch(Exception e) {
+/*
+Jsonìœ¼ë¡œ ì²˜ë¦¬í–ˆì„ ë•Œ 
+		`	    response.setContentType("application/json;charset=UTF-8");
+		            PrintWriter out = response.getWriter();   
+		            out.print("{\"result\":\"error\"}");
+		            out.flush();
+		            out.close();  
+
+*/
+
+			
 			e.printStackTrace();
 			response.setContentType("text/html;charset=UTF-8");
-	        PrintWriter out = response.getWriter();   
-            out.print("error");  
-	        out.flush();
-	        out.close();	
+			// PrintWriter íƒ€ìž…ì€ int, float, double, String ë˜ëŠ” Objectì™€ ê°™ì€ ëª¨ë“  í˜•íƒœì˜ ë°ì´í„°ë¥¼ ì½˜ì†”ì´ë‚˜ 
+			//Javaì˜ íŒŒì¼ì— í…ìŠ¤íŠ¸ í˜•ì‹ìœ¼ë¡œ ì“°ëŠ” ë° ì‚¬ìš©ë˜ëŠ” í´ëž˜ìŠ¤
+		        PrintWriter out = response.getWriter();   
+	            	out.print("error");  
+		        out.flush();
+		        out.close();	
 		}finally {
 			try {
 				DBConn.close(psmt, conn);
@@ -371,7 +384,7 @@ public class BoardController {
 					 vo.setIsfollow(rs.getString("isfollow"));
 				 }
 				 
-				 //Á¶È¸¼ö Áõ°¡
+				 //ì¡°íšŒìˆ˜ ì¦ê°€
 				 int hit = rs.getInt("hit");
 				 String sqlHit = "update board set hit = ? where bno = ?";
 				 hit++;
@@ -383,7 +396,7 @@ public class BoardController {
 				 vo.setHit(hit);
 			}
 			
-			//´ñ±Û¸ñ·Ï °¡Á®¿À±â
+			//ëŒ“ê¸€ëª©ë¡ ê°€ì ¸ì˜¤ê¸°
 			String sqlComments = " SELECT c.*,u.unick,u.pname "
 					  + " FROM comments c "
 					  + " INNER JOIN user u "
@@ -411,7 +424,7 @@ public class BoardController {
 				clist.add(cvo);
 			}
 			
-			//¸®Äù½ºÆ®¿¡ ´ã±â
+			//ë¦¬í€˜ìŠ¤íŠ¸ì— ë‹´ê¸°
 			request.setAttribute("clist", clist);
 			request.setAttribute("board", vo);
 			request.getRequestDispatcher("/WEB-INF/board/view.jsp").forward(request, response);
@@ -441,7 +454,7 @@ public class BoardController {
 			UserVO user = (UserVO)session.getAttribute("loginUser");
 			uno = user.getUno();
 		}
-		System.out.println("¹ÞÀº bno °ª: " + bno + ", uno : " + uno);
+		System.out.println("ë°›ì€ bno ê°’: " + bno + ", uno : " + uno);
 		Connection conn = null;
 		PreparedStatement psmt = null;
 		ResultSet rs = null;
@@ -449,7 +462,7 @@ public class BoardController {
 		try {
 		    conn = DBConn.conn();
 
-		    // »ç¿ëÀÚ°¡ ÀÌ °Ô½Ã¹°À» ÃßÃµÇß´ÂÁö È®ÀÎ
+		    // ì‚¬ìš©ìžê°€ ì´ ê²Œì‹œë¬¼ì„ ì¶”ì²œí–ˆëŠ”ì§€ í™•ì¸
 		    String checkReco = "select * from love where uno = ? and bno = ?";
 		    System.out.println("sql checkReco: "+checkReco);
 		    psmt = conn.prepareStatement(checkReco);
@@ -471,7 +484,7 @@ public class BoardController {
 	        	rCnt = rs.getInt("rCnt");
 	        }
 		    
-		    
+		     // ì‘ë‹µì‹œ ë³´ë‚´ëŠ” ë°ì´í„°ë¥¼ json ë°ì´í„°ë¡œ ë³€í•œ 
 		    JSONObject jsonObj = new JSONObject(); 
 		    jsonObj.put("bno", bno); 
 		    jsonObj.put("lState", lState);
@@ -535,7 +548,7 @@ public class BoardController {
 		    rs = psmt.executeQuery();
 
 		    if (rs.next()) {
-		        // ÃßÃµÀÌ ÀÌ¹Ì Á¸ÀçÇÏ¸é delete
+		        // ì¶”ì²œì´ ì´ë¯¸ ì¡´ìž¬í•˜ë©´ delete
 		    	sql = "delete from love where uno = ? and bno = ?";
 		        psmt = conn.prepareStatement(sql);
 		        psmt.setString(1, uno);
@@ -548,7 +561,7 @@ public class BoardController {
 		        psmtA.setString(2, "L");
 		        psmtA.executeUpdate();
 		    } else {
-		        // ÃßÃµÀÌ ¾øÀ¸¸é insert
+		        // ì¶”ì²œì´ ì—†ìœ¼ë©´ insert
 		        sql = "insert into love (uno, bno) values (?, ?)";
 		        psmt = conn.prepareStatement(sql);
 		        psmt.setString(1, uno);
@@ -630,7 +643,7 @@ public class BoardController {
 
 	public void modifyOk(HttpServletRequest request
 			, HttpServletResponse response) throws ServletException, IOException {
-		// ³»¿ë ¼öÁ¤ÇÑ ³»¿ëÀ» ÀúÀåÇØ¾ßÇÔ
+		// ë‚´ìš© ìˆ˜ì •í•œ ë‚´ìš©ì„ ì €ìž¥í•´ì•¼í•¨
 		/*
 		 	UPDATE board set title = ? content = ? where bno = ? 
 		 */
@@ -638,59 +651,59 @@ public class BoardController {
 		/* String uploadPath = request.getServletContext().getRealPath("/upload"); */
 		String uploadPath = request.getServletContext().getRealPath("/upload");
 		
-		System.out.println("¼­¹öÀÇ ¾÷·Îµå Æú´õ °æ·Î : " + uploadPath);
+		System.out.println("ì„œë²„ì˜ ì—…ë¡œë“œ í´ë” ê²½ë¡œ : " + uploadPath);
 	
 		
 		MultipartRequest multi;
 		int size = 10 * 1024 * 1024;
 		try {
-		    // ÆÄÀÏ ¾÷·Îµå Ã³¸®
+		    // íŒŒì¼ ì—…ë¡œë“œ ì²˜ë¦¬
 		    multi = new MultipartRequest(request, uploadPath, size, "UTF-8", new DefaultFileRenamePolicy());
 		} catch (Exception e) {
 			e.getStackTrace();
-		    // ÆÄÀÏ ¾÷·Îµå ½ÇÆÐ ½Ã Ã³¸®
+		    // íŒŒì¼ ì—…ë¡œë“œ ì‹¤íŒ¨ ì‹œ ì²˜ë¦¬
 		    response.sendRedirect(request.getContextPath());
 		    return;
 		}
-		// ¹ÙÀÌ³Ê¸® ÆÄÀÏ >>> request »ç¿ë x ,multi »ç¿ë
+		// ë°”ì´ë„ˆë¦¬ íŒŒì¼ >>> request ì‚¬ìš© x ,multi ì‚¬ìš©
 		int bno = Integer.parseInt(multi.getParameter("bno"));
 		System.out.println(bno);
-		// input Å¸ÀÔ¿¡ ÆÄÀÏÀÌ ¿©·¯°³ Á¸ÀçÇÏ´Â °æ¿ì  
+		// input íƒ€ìž…ì— íŒŒì¼ì´ ì—¬ëŸ¬ê°œ ì¡´ìž¬í•˜ëŠ” ê²½ìš°  
 		Enumeration files = multi.getFileNames();
 		/*
-			// ÆÄÀÏÀÌ input Å¸ÀÔ¿¡ ÇÑ °³¸¸ Á¸ÀçÇÏ´Â °æ¿ì 
+			// íŒŒì¼ì´ input íƒ€ìž…ì— í•œ ê°œë§Œ ì¡´ìž¬í•˜ëŠ” ê²½ìš° 
 			multi.getFilesystemName("attach");
 		*/
-		String filename = multi.getFilesystemName("attach");  // ¿øº» ÆÄÀÏ ÀÌ¸§
-		String phyname = null;   // ¼­¹ö¿¡ ÀúÀåµÉ ÆÄÀÏ ÀÌ¸§
+		String filename = multi.getFilesystemName("attach");  // ì›ë³¸ íŒŒì¼ ì´ë¦„
+		String phyname = null;   // ì„œë²„ì— ì €ìž¥ë  íŒŒì¼ ì´ë¦„
 		String title = multi.getParameter("title");
 		String content = multi.getParameter("content");
 		
 		if (files.hasMoreElements()) {
 		    String fileid = (String) files.nextElement();
-		    filename = multi.getFilesystemName(fileid);  // ¿øº» ÆÄÀÏ ÀÌ¸§ °¡Á®¿À±â
+		    filename = multi.getFilesystemName(fileid);  // ì›ë³¸ íŒŒì¼ ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
 
 		    if (filename != null) {
-		        System.out.println("¾÷·ÎµåµÈ ÆÄÀÏ ÀÌ¸§: " + filename);
+		        System.out.println("ì—…ë¡œë“œëœ íŒŒì¼ ì´ë¦„: " + filename);
 		        System.out.println("title:"+title);
 		        System.out.println("content:"+content);
 		        
-		        // ¹°¸® ÆÄÀÏ ÀÌ¸§ »ý¼º (UUID »ç¿ë)
+		        // ë¬¼ë¦¬ íŒŒì¼ ì´ë¦„ ìƒì„± (UUID ì‚¬ìš©)
 		        phyname = UUID.randomUUID().toString();  
 		        
-		        // ÆÄÀÏ °æ·Î ¼³Á¤
+		        // íŒŒì¼ ê²½ë¡œ ì„¤ì •
 		        String srcName = uploadPath + "/" + filename;  
 		        String targetName = uploadPath + "/" + phyname;
 		        
-		        // ÆÄÀÏ ÀÌ¸§ º¯°æ (UUID·Î ÀúÀå)
+		        // íŒŒì¼ ì´ë¦„ ë³€ê²½ (UUIDë¡œ ì €ìž¥)
 		        File srcFile = new File(srcName);
 		        File targetFile = new File(targetName);
 
 		        boolean renamed = srcFile.renameTo(targetFile);
 		        if (!renamed) {
-		            System.out.println("ÆÄÀÏ ÀÌ¸§ º¯°æ ½ÇÆÐ");
+		            System.out.println("íŒŒì¼ ì´ë¦„ ë³€ê²½ ì‹¤íŒ¨");
 		        } else {
-		            System.out.println("ÆÄÀÏ ÀÌ¸§ º¯°æ ¼º°ø: " + phyname);
+		            System.out.println("íŒŒì¼ ì´ë¦„ ë³€ê²½ ì„±ê³µ: " + phyname);
 		        }
 		    }
 		}
@@ -733,7 +746,7 @@ public class BoardController {
 			
 			String sql = " UPDATE board SET title = ?, content = ? "
 					+ " WHERE bno =?";
-			// sqlÀ» ´ã°í, ¸®ÅÏ Å°¸¦ ¹ÞÀ½
+			// sqlì„ ë‹´ê³ , ë¦¬í„´ í‚¤ë¥¼ ë°›ìŒ
 			psmt =conn.prepareStatement(sql/*, PreparedStatement.RETURN_GENERATED_KEYS*/);
 			psmt.setString(1, title);
 			psmt.setString(2, content);
@@ -743,33 +756,33 @@ public class BoardController {
 				if (filename != null && phyname != null ) {
 				String sql1 = " UPDATE attach SET pname = ? , fname = ? "
 						+ " WHERE bno = ?";
-				// select last_insert_id()¸¦ ¹Þ¾Æ¿Í¼­ , bno¸¦ ´ëÀÔ 
+				// select last_insert_id()ë¥¼ ë°›ì•„ì™€ì„œ , bnoë¥¼ ëŒ€ìž… 
 				psmtAttach =conn.prepareStatement(sql1);
-				psmtAttach.setString(1, phyname);  // ¹°¸®ÆÄÀÏ ÀÌ¸§ (¼­¹ö¿¡ ÀúÀåµÈ ÆÄÀÏÀÇ ÀÌ¸§)
-				psmtAttach.setString(2, filename); // ¿øº» ÆÄÀÏ ÀÌ¸§ (»ç¿ëÀÚ°¡ ¾÷·ÎµåÇÑ ÆÄÀÏ ÀÌ¸§)
-				psmtAttach.setLong(3, bno);  // ÅëÇØ ¹Þ¾Æ¿Â Å°¸¦ bno¿¡ ÀúÀåÇÔ,
+				psmtAttach.setString(1, phyname);  // ë¬¼ë¦¬íŒŒì¼ ì´ë¦„ (ì„œë²„ì— ì €ìž¥ëœ íŒŒì¼ì˜ ì´ë¦„)
+				psmtAttach.setString(2, filename); // ì›ë³¸ íŒŒì¼ ì´ë¦„ (ì‚¬ìš©ìžê°€ ì—…ë¡œë“œí•œ íŒŒì¼ ì´ë¦„)
+				psmtAttach.setLong(3, bno);  // í†µí•´ ë°›ì•„ì˜¨ í‚¤ë¥¼ bnoì— ì €ìž¥í•¨,
 				resultAttach = psmtAttach.executeUpdate();
 				}
-				//  board Å×ÀÌºí ¼öÁ¤ ¿©ºÎ È®ÀÎ
+				//  board í…Œì´ë¸” ìˆ˜ì • ì—¬ë¶€ í™•ì¸
 				System.out.println("result::"+result);
-				// attach Å×ÀÌºí ¼öÁ¤ ¿©ºÎ È®ÀÎ
+				// attach í…Œì´ë¸” ìˆ˜ì • ì—¬ë¶€ í™•ì¸
 				System.out.println("resultAttach::"+ resultAttach);
 				
 				/*
-				 // redirect´Â »õ·Î°íÄ§ ÇÏ±â ¶§¹®¿¡ ,ajaxÀÇ ¸ñÀûÀÎ ÆäÀÌÁö¸¦
-				    »õ·Î°íÄ§ÇÏÁö ¾Ê°í ¼­¹ö¿Í µ¥ÀÌÅÍ¸¦ ÁÖ°í ¹Þ´Â°Ô µÉ ¼ö ¾øÀ½
+				 // redirectëŠ” ìƒˆë¡œê³ ì¹¨ í•˜ê¸° ë•Œë¬¸ì— ,ajaxì˜ ëª©ì ì¸ íŽ˜ì´ì§€ë¥¼
+				    ìƒˆë¡œê³ ì¹¨í•˜ì§€ ì•Šê³  ì„œë²„ì™€ ë°ì´í„°ë¥¼ ì£¼ê³  ë°›ëŠ”ê²Œ ë  ìˆ˜ ì—†ìŒ
 				response.sendRedirect(request.getContextPath()+"index.jsp");*/
 				response.setContentType("text/html;charset=UTF-8");
 				PrintWriter out = response.getWriter();
 				
 				JSONObject json = new JSONObject();
 				json.put("result", "success");
-				json.put("bno", bno);   //JsonÀº Å°¿Í °ªÀ¸·Î ÀÌ·ç¾îÁ® ÀÖÀ½
+				json.put("bno", bno);   //Jsonì€ í‚¤ì™€ ê°’ìœ¼ë¡œ ì´ë£¨ì–´ì ¸ ìžˆìŒ
 				
 				out.print(json.toString());
-				// out¿¡ µé¾îÀÖ´Â °ªÀ» Áö¿ò
+				// outì— ë“¤ì–´ìžˆëŠ” ê°’ì„ ì§€ì›€
 				out.flush();
-				// outÀ» ´ÝÀ½				
+				// outì„ ë‹«ìŒ				
 				out.close();          
 			}
 			
@@ -779,12 +792,12 @@ public class BoardController {
 	        PrintWriter out = response.getWriter();   
 	        JSONObject json = new JSONObject();
 			json.put("result", "error");
-			json.put("bno", bno);   //JsonÀº Å°¿Í °ªÀ¸·Î ÀÌ·ç¾îÁ® ÀÖÀ½
+			json.put("bno", bno);   //Jsonì€ í‚¤ì™€ ê°’ìœ¼ë¡œ ì´ë£¨ì–´ì ¸ ìžˆìŒ
 			
 			out.print(json.toString());
-			// out¿¡ µé¾îÀÖ´Â °ªÀ» Áö¿ò
+			// outì— ë“¤ì–´ìžˆëŠ” ê°’ì„ ì§€ì›€
 			out.flush();
-			// outÀ» ´ÝÀ½				
+			// outì„ ë‹«ìŒ				
 			out.close();    
             
 		}finally {
@@ -816,17 +829,17 @@ public class BoardController {
 			int result = psmt.executeUpdate();
 			if(result > 0 ) {
 				/*
-				 // redirect´Â »õ·Î°íÄ§ ÇÏ±â ¶§¹®¿¡ ,ajaxÀÇ ¸ñÀûÀÎ ÆäÀÌÁö¸¦
-				    »õ·Î°íÄ§ÇÏÁö ¾Ê°í ¼­¹ö¿Í µ¥ÀÌÅÍ¸¦ ÁÖ°í ¹Þ´Â°Ô µÉ ¼ö ¾øÀ½
+				 // redirectëŠ” ìƒˆë¡œê³ ì¹¨ í•˜ê¸° ë•Œë¬¸ì— ,ajaxì˜ ëª©ì ì¸ íŽ˜ì´ì§€ë¥¼
+				    ìƒˆë¡œê³ ì¹¨í•˜ì§€ ì•Šê³  ì„œë²„ì™€ ë°ì´í„°ë¥¼ ì£¼ê³  ë°›ëŠ”ê²Œ ë  ìˆ˜ ì—†ìŒ
 				response.sendRedirect(request.getContextPath()+"index.jsp");*/
 				
 				/*
-				 1) ¾Æ·¡ÀÇ ¹æ¹ýÀ» ÅëÇØ ¼­¹ö°¡ Å¬¶óÀÌ¾ðÆ®¿¡ Á÷Á¢ ÀÀ´äÀ» º¸³¿
-				 2) Å¬¶óÀÌ¾ðÆ®°¡ ¿äÃ»¿¡ ´ëÇØ ÀÀ´äÀ» ¹Þ°í, JavaScript¿¡¼­ Ã³¸®ÇÔ
-	  			    {ÀÚ¹Ù½ºÅ©¸³Æ®¿¡¼­ ÀûÀýÇÑ µ¿ÀÛ(¿¹: ÆäÀÌÁö ¸®µð·º¼Ç, ¸Þ½ÃÁö Ç¥½Ã µî)}À» ¼öÇà
-				 3) Å¬¶óÀÌ¾ðÆ® Ãø Ã³¸®
-					AJAX ¿äÃ»ÀÇ ¼º°ø ÄÝ¹é ÇÔ¼ö(success) ³»¿¡¼­ 
-					ÀÀ´äÀ» ¹Þ¾Æ¼­ ÆäÀÌÁö¸¦ ¾÷µ¥ÀÌÆ®ÇÏ°Å³ª ´Ù¸¥ µ¿ÀÛÀ» ¼öÇàÇÒ ¼ö ÀÖ°í, ÀÌ¶§ »õ·Î °íÄ§ ¾øÀÌ ÀÀ´ä °á°ú¿¡ µû¶ó UIº¯°æ °¡´É 
+				 1) ì•„ëž˜ì˜ ë°©ë²•ì„ í†µí•´ ì„œë²„ê°€ í´ë¼ì´ì–¸íŠ¸ì— ì§ì ‘ ì‘ë‹µì„ ë³´ëƒ„
+				 2) í´ë¼ì´ì–¸íŠ¸ê°€ ìš”ì²­ì— ëŒ€í•´ ì‘ë‹µì„ ë°›ê³ , JavaScriptì—ì„œ ì²˜ë¦¬í•¨
+	  			    {ìžë°”ìŠ¤í¬ë¦½íŠ¸ì—ì„œ ì ì ˆí•œ ë™ìž‘(ì˜ˆ: íŽ˜ì´ì§€ ë¦¬ë””ë ‰ì…˜, ë©”ì‹œì§€ í‘œì‹œ ë“±)}ì„ ìˆ˜í–‰
+				 3) í´ë¼ì´ì–¸íŠ¸ ì¸¡ ì²˜ë¦¬
+					AJAX ìš”ì²­ì˜ ì„±ê³µ ì½œë°± í•¨ìˆ˜(success) ë‚´ì—ì„œ 
+					ì‘ë‹µì„ ë°›ì•„ì„œ íŽ˜ì´ì§€ë¥¼ ì—…ë°ì´íŠ¸í•˜ê±°ë‚˜ ë‹¤ë¥¸ ë™ìž‘ì„ ìˆ˜í–‰í•  ìˆ˜ ìžˆê³ , ì´ë•Œ ìƒˆë¡œ ê³ ì¹¨ ì—†ì´ ì‘ë‹µ ê²°ê³¼ì— ë”°ë¼ UIë³€ê²½ ê°€ëŠ¥ 
 				 */
 				response.setContentType("text/html;charset=UTF-8");
 				PrintWriter out = response.getWriter();  
